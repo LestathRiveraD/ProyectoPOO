@@ -87,9 +87,9 @@ public class VistaJugador extends JFrame implements ActionListener
         public VistaJugador(String img, String rivalImg)
         {
             //Creacion de ventara y personalizacion de su vista
-            icon = new ImageIcon(getClass().getResource(img));
+            icon = new ImageIcon(img);
             image = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            rivalIcon = new ImageIcon(getClass().getResource(rivalImg));
+            rivalIcon = new ImageIcon(rivalImg);
             rivalImage = rivalIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
             this.setTitle("GatoPlusPlus");
             this.setDefaultCloseOperation(EXIT_ON_CLOSE);
