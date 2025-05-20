@@ -1,11 +1,20 @@
 public class JuegoDTO {
-        private int ganador;
+        private String ganador;
+        private String id;
 
-        public void setGanador(int ganador) {
+        public void setGanador(String ganador) {
             this.ganador = ganador;
         }
         ;
-        public int getGanador() {
+        public String getGanador() {
             return ganador;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
         }
     }
