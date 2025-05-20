@@ -8,4 +8,5 @@ public interface Board
     void gameover(String message);
     String getStatus();
     void reinicio();
+    boolean isConnected();
 }
