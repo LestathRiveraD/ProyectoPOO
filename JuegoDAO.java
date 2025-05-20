@@ -5,8 +5,7 @@ public class JuegoDAO extends ConexionDB {
         private static final String ID = "id";
         private static final String SQL_SELECT_ALL = "SELECT * FROM JUEGO";
         private static final String SQL_INSERT = "INSERT INTO JUEGO" +
-                "(" +
-                "," + GANADOR +
+                "(" + GANADOR +
                 "," + ID +
                 ")VALUES (?,?)";
         private static final String SQL_READ = "SELECT * FROM JUEGO  WHERE" + ID + " = ?";
