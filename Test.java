@@ -6,8 +6,18 @@ public class Test
         Board p1 = new VistaJugador("./assets/1.png", "./assets/2.png").getInterface();
         Board p2 = new VistaJugador("./assets/2.png", "./assets/1.png").getInterface();
         int[] x;
+        while (true)
+        {
+            if (p1.isConnected() && p2.isConnected())
+            {
+                break;
+            }
+            Thread.yield();
+        }
+        p1.reinicio();
+        p2.reinicio();
+        p1.setMy_turn(true);
         p2.setMy_turn(false);
-
         while (true)
         {
             boolean turn1 = p1.getMy_turn();

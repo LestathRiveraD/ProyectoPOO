@@ -18,6 +18,10 @@ public class VistaJugador extends JFrame implements ActionListener
         private JPanel statuspanel;
         private JTextArea status;
         private JButton botonReinicio;
+        private JPanel connectionPanel;
+        private JTextArea ipInput;
+        private JButton botonMandar;
+        boolean conectado = false;
 
         //Creación de interfaz Boards que tiene los metodos con los que se puede interactuar
         private Board board_interface = new Board()
@@ -68,6 +72,11 @@ public class VistaJugador extends JFrame implements ActionListener
                 habilitarReinicio();
             }
 
+            @Override
+            public boolean isConnected() {
+                return conectado;
+            }
+
             public String getStatus()
             {
                 return status.getText();
@@ -99,13 +108,19 @@ public class VistaJugador extends JFrame implements ActionListener
             this.setLayout(new BorderLayout());
             panel = new JPanel(new GridLayout(3,3,3,3));
             statuspanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            status = new JTextArea("TU TURNO");
+            status = new JTextArea("INGRESA EL IP");
             status.setEditable(false);
             status.setFont(new Font("papyrus", Font.BOLD, 25));
             status.setFocusable(false);
             statuspanel.add(status);
+            connectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            ipInput = new JTextArea("IP del servidor");
+            botonMandar = new JButton("Mandar");
+            botonMandar.addActionListener(this);
             botonReinicio = new JButton("Reinicio");
             botonReinicio.addActionListener(this);
+            connectionPanel.add(ipInput);
+            connectionPanel.add(botonMandar);
             deshabilitarReinicio();
             this.setBackground(Color.GRAY);
             statuspanel.add(botonReinicio);
@@ -119,12 +134,13 @@ public class VistaJugador extends JFrame implements ActionListener
                 boton.setOpaque(true);
                 boton.addActionListener(this);
                 boton.setForeground(new Color(0, 0, 0, 0));
-                boton.setText(String.valueOf(i));
+                boton.setText("x");
                 panel.add(boton);
                 botones_lista.add(boton);
             }
             this.add(panel, BorderLayout.CENTER);
             this.add(statuspanel, BorderLayout.NORTH);
+            this.add(connectionPanel, BorderLayout.SOUTH);
             this.setVisible(true);
 
         }
@@ -133,6 +149,11 @@ public class VistaJugador extends JFrame implements ActionListener
         @Override
         public void actionPerformed(ActionEvent e) {
             JButton boton = (JButton) e.getSource();
+            if (boton.getText().equals("Mandar"))
+            {
+                conectar(ipInput.getText());
+                return;
+            }
             if (boton.getText() == "Reinicio")
             {
                 status.setText("ESPERANDO REINICIO");
@@ -171,4 +192,11 @@ public class VistaJugador extends JFrame implements ActionListener
         {
             botonReinicio.setVisible(true);
         }
+        private void conectar(String ip)
+        {
+            System.out.println(ip);
+            connectionPanel.setVisible(false);
+            conectado = true;
+        }
     }
+
