@@ -7,7 +7,7 @@ public class ConexionDB {
     public ConexionDB(){
         String usr = "root";
         String pwd = "root";
-        String url = "jdbc:mysql://localhost:3306/mibasededatos";
+        String url = "jdbc:mysql://localhost:3001/gato";
         String driver = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(driver);
