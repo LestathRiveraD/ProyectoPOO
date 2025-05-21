@@ -7,13 +7,30 @@ public class Facade {
         dto.setGanador(String.valueOf(resultado));
         dao.append(dto);
     }
-    public int get_resutados() throws Exception {
+    public int[] get_resutados() throws Exception {
         List <JuegoDTO> juegos = dao.readALL();
+        int[] x = {0, 0};
         for (JuegoDTO juego : juegos)
         {
-            System.out.println(juego.getGanador());
+            switch (juego.getGanador())
+            {
+                case "1":
+                {
+                    x[0]++;
+                    break;
+                }
+                case "2":
+                {
+                    x[1]++;
+                    break;
+                }
+                default:
+                {
+                    ;
+                }
+            }
         }
-        return 0;
+        return x;
     }
     public void reset_resutados() throws Exception {
         dao.resetTable();
