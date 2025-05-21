@@ -6,13 +6,13 @@ public class JuegoDAO extends ConexionDB {
         private static final String SQL_SELECT_ALL = "SELECT * FROM JUEGO";
         private static final String SQL_INSERT = "INSERT INTO JUEGO" +
                 "(" + GANADOR +
-                "," + ID +
-                ")VALUES (?,?)";
+                ")VALUES (?)";
         private static final String SQL_READ = "SELECT * FROM JUEGO  WHERE" + ID + " = ?";
         private static final String SQL_DELETE = "DELETE FROM JUEGO WHERE " + ID + " = ?";
         private static final String SQL_UPDATE = "UPDATE JUEGO SET" +
                 GANADOR + " = ?," +
                 "WHERE " + ID + " = ?";
+        private static final String SQL_RESET = "TRUNCATE TABLE JUEGO";
         public JuegoDAO() {
             super();
         }
@@ -33,22 +33,21 @@ public class JuegoDAO extends ConexionDB {
             PreparedStatement ps = null;
             ps = conexion.prepareStatement(SQL_INSERT);
             ps.setString(1, dto.getGanador());
-            ps.setString(2, dto.getId());
             ps.executeUpdate();
             cerrar(ps);
         }
-        public void update(JuegoDTO dto) throws Exception {
+        public void update(JuegoDTO dto, String id) throws Exception {
             PreparedStatement ps = null;
             ps = conexion.prepareStatement(SQL_UPDATE);
             ps.setString(1, dto.getGanador());
-            ps.setString(2, dto.getId());
+            ps.setString(2, id);
             ps.executeUpdate();
             cerrar(ps);
         }
-        public void delete(JuegoDTO dto) throws Exception {
+        public void delete(JuegoDTO dto, String id) throws Exception {
             PreparedStatement ps = null;
             ps = conexion.prepareStatement(SQL_DELETE);
-            ps.setString(1, dto.getId());
+            ps.setString(1, id);
             ps.executeUpdate();
             cerrar(ps);
         }
@@ -70,8 +69,14 @@ public class JuegoDAO extends ConexionDB {
         private JuegoDTO getObject(ResultSet rs) throws Exception {
             JuegoDTO dtoPersona = new JuegoDTO();
             dtoPersona.setGanador(rs.getString(GANADOR));
-            dtoPersona.setId(rs.getString(ID));
             return dtoPersona;
+        }
+
+        public void resetTable() throws Exception {
+            PreparedStatement ps = null;
+            ps = conexion.prepareStatement(SQL_RESET);
+            ps.executeUpdate();
+            cerrar(ps);
         }
     }
 
