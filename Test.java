@@ -3,9 +3,11 @@ public class Test
     public static void main(String[] args) throws Exception {
         Facade facade = new Facade();
         Juego test = new Juego();
+        VistaServidor tabla = new VistaServidor();
         Board p1 = new VistaJugador("./assets/1.png", "./assets/2.png").getInterface();
         Board p2 = new VistaJugador("./assets/2.png", "./assets/1.png").getInterface();
         int[] x;
+        facade.reset_resutados();
         while (true)
         {
             if (p1.isConnected() && p2.isConnected())
@@ -54,12 +56,14 @@ public class Test
                         p1.gameover("GANASTE");
                         p2.gameover("PERDISTE");
                         facade.addJuego(1);
+                        tabla.updateRecord(facade.get_resutados());
                         break;
                     case 2:
                         System.out.println("Cross won");
                         p1.gameover("PERDISTE");
                         p2.gameover("GANASTE");
                         facade.addJuego(2);
+                        tabla.updateRecord(facade.get_resutados());
                         break;
                 }
             }
