@@ -1,6 +1,7 @@
 public class Test
 {
     public static void main(String[] args) throws Exception {
+        Facade facade = new Facade();
         Juego test = new Juego();
         Board p1 = new VistaJugador("./assets/1.png", "./assets/2.png").getInterface();
         Board p2 = new VistaJugador("./assets/2.png", "./assets/1.png").getInterface();
@@ -52,11 +53,13 @@ public class Test
                         System.out.println("Circle won");
                         p1.gameover("GANASTE");
                         p2.gameover("PERDISTE");
+                        facade.addJuego(1);
                         break;
                     case 2:
                         System.out.println("Cross won");
                         p1.gameover("PERDISTE");
                         p2.gameover("GANASTE");
+                        facade.addJuego(2);
                         break;
                 }
             }
