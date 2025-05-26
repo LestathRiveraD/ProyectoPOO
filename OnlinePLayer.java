@@ -95,7 +95,7 @@ public class OnlinePLayer extends JFrame implements ActionListener
         }
 
         @Override
-        public void reinicio() {
+        public void reinicio(Boolean p1) {
             for (int i = 0; i < botones_lista.size(); i++)
             {
                 JButton boton = (JButton) botones_lista.get(i);

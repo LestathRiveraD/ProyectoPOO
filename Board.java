@@ -7,6 +7,6 @@ public interface Board
     void setChange(int[] change);
     void gameover(String message);
     String getStatus();
-    void reinicio();
+    void reinicio(Boolean p1);
     boolean isConnected();
 }

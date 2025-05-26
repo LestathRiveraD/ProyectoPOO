@@ -93,14 +93,16 @@ public class VistaJugador extends JFrame implements ActionListener
         }
 
         @Override
-        public void reinicio() {
+        public void reinicio(Boolean p1) {
             for (int i = 0; i < botones_lista.size(); i++)
             {
                 JButton boton = (JButton) botones_lista.get(i);
                 boton.setText(String.valueOf(i));
                 boton.setIcon(null);
             }
+            setMy_turn(p1);
             deshabilitarReinicio();
+
         }
     };
     
@@ -159,10 +161,13 @@ public class VistaJugador extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton boton = (JButton) e.getSource();
+        System.out.println("??? 2");
         if (e.getSource() == botonMandar && !conectado) 
         {
+            System.out.println("x");
             try 
             {
+                System.out.println("mandando");
                 socket = new Socket(ipInput.getText(), 9001);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -195,20 +200,30 @@ public class VistaJugador extends JFrame implements ActionListener
                 board_interface.setMy_turn(my_turn);
                 conectado = true;
 
-
+                System.out.println("Creando thread de escucha...");
                 new Thread(() -> {
+                    System.out.println("d");
                     while (true) 
-                    { 
+                    {
                         try {
                             String mensaje = in.readLine();
+                            System.out.println(mensaje);
                             if (mensaje.startsWith("fin:")) {
                                 int resultado = Integer.parseInt(mensaje.substring(4));
                                 if (resultado == 1) board_interface.gameover("GANÓ JUGADOR 1");
                                 else if (resultado == 2) board_interface.gameover("GANÓ JUGADOR 2");
                                 else board_interface.gameover("EMPATE");
-                                break;
                             }
-
+                            if (mensaje.equals("reinicio")) {
+                                if (path.equals("assets/2.png"))
+                                {
+                                    board_interface.reinicio(false);
+                                }
+                                else
+                                {
+                                    board_interface.reinicio(true);
+                                }
+                            }
                             int opponent_move = Integer.parseInt(mensaje);
                             board_interface.fillSquare(return_coords(String.valueOf(opponent_move)));
                             board_interface.setMy_turn(true);
@@ -217,6 +232,7 @@ public class VistaJugador extends JFrame implements ActionListener
                         catch (Exception e1) {
                             e1.printStackTrace();
                         }
+                        Thread.yield();
                     }
                 }).start();
             } 
@@ -224,10 +240,14 @@ public class VistaJugador extends JFrame implements ActionListener
                 ex.printStackTrace();
             }
         }
-
+        else
+        {
+            System.out.println("o");
+        }
         if (boton.getText() == "Reinicio")
         {
             status.setText("ESPERANDO REINICIO");
+            out.println("ESPERANDO REINICIO");
             return;
         }
         if (my_turn == false){

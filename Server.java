@@ -7,8 +7,11 @@ import java.net.Socket;
 
 public class Server 
 {
-    public static void main(String[] args) throws IOException 
+    public static void main(String[] args) throws Exception
     {
+        VistaServidor vistaServidor = new VistaServidor();
+        Facade facade = new Facade();
+        vistaServidor.updateRecord(facade.get_resutados());
         ServerSocket servidor = new ServerSocket(9001); // Iniciar servidor
 
         // Set up player 1's connection
@@ -57,7 +60,23 @@ public class Server
             if (estado != -1) {
                 out_jugador1.println("fin:" + estado);
                 out_jugador2.println("fin:" + estado);
-                break;
+                facade.addJuego(estado);
+                vistaServidor.updateRecord(facade.get_resutados());
+                while (true)
+                {
+                    String resutado = in_jugador1.readLine();
+                    String resutado2 = in_jugador2.readLine();
+                    if (resutado.equals(resutado2))
+                    {
+                        System.out.println("YES");
+                        out_jugador1.println("reinicio");
+                        out_jugador2.println("reinicio");
+                        juego.clearBoard();
+                        break;
+                    }
+                    Thread.yield();
+                }
+                continue;
             }
 
             // Movimiento jugador 2
@@ -73,7 +92,23 @@ public class Server
             if (estado != -1) {
                 out_jugador1.println("fin:" + estado);
                 out_jugador2.println("fin:" + estado);
-                break;
+                facade.addJuego(estado);
+                vistaServidor.updateRecord(facade.get_resutados());
+                while (true)
+                {
+                    String resutado = in_jugador1.readLine();
+                    String resutado2 = in_jugador2.readLine();
+                    if (resutado.equals(resutado2))
+                    {
+                        System.out.println("YES");
+                        out_jugador1.println("reinicio");
+                        out_jugador2.println("reinicio");
+                        juego.clearBoard();
+                        break;
+                    }
+                    Thread.yield();
+                }
+                continue;
             }
 
         }
