@@ -1,6 +1,6 @@
 public class Juego
 {
-    private int board[][];
+    public int board[][];
 
     public Juego()
     {
@@ -8,6 +8,12 @@ public class Juego
         clearBoard();
     }
 
+    /*
+     * Return value of -1 means game has not finished
+     * Return value of 0 means game ended in a draw
+     * Return value of 1 means player 1 won
+     * Return value of 2 mean player 2 won
+    */ 
     public int getGameState() {
         for (int row[] : board) // Check board rows for winner
         {
@@ -51,19 +57,21 @@ public class Juego
 
         for (int i = 0; i < 3; i++) // If no winner and there are empty tiles, game has not finished
         {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == 0) {
+            for (int j = 0; j < 3; j++)
+            {
+                if (board[i][j] == 0) 
+                {
                     return -1;
                 }
             }
         }
 
-        return 0; // If game is finished and there are no winner, then draw
+        return 0; // If game is finished and there is no winner, then draw
     }
 
-    public void updateBoard(int vec[], int player)
+    public void updateBoard(int col, int row, int player)
     {
-        board[vec[0]][vec[1]] = player;
+        board[col][row] = player;
     }
 
     public void clearBoard()
@@ -74,6 +82,18 @@ public class Juego
             {
                 board[i][j] = 0;
             }
+        }
+    }
+
+    public void printBoard()
+    {
+        for (int vec[] : board)
+        {
+            for (int i : vec)
+            {
+                System.out.print(i + " ");
+            }
+            System.out.println();
         }
     }
 }
