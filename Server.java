@@ -10,8 +10,7 @@ public class Server
     public static void main(String[] args) throws Exception
     {
         VistaServidor vistaServidor = new VistaServidor();
-        Facade facade = new Facade();
-        vistaServidor.updateRecord(facade.get_resutados());
+        vistaServidor.updateRecord();
         ServerSocket servidor = new ServerSocket(9001); // Iniciar servidor
 
         // Set up player 1's connection
@@ -60,8 +59,8 @@ public class Server
             if (estado != -1) {
                 out_jugador1.println("fin:" + estado);
                 out_jugador2.println("fin:" + estado);
-                facade.addJuego(estado);
-                vistaServidor.updateRecord(facade.get_resutados());
+                vistaServidor.result_update(estado);
+                vistaServidor.updateRecord();
                 while (true)
                 {
                     String resutado = in_jugador1.readLine();
@@ -92,8 +91,8 @@ public class Server
             if (estado != -1) {
                 out_jugador1.println("fin:" + estado);
                 out_jugador2.println("fin:" + estado);
-                facade.addJuego(estado);
-                vistaServidor.updateRecord(facade.get_resutados());
+                vistaServidor.result_update(estado);
+                vistaServidor.updateRecord();
                 while (true)
                 {
                     String resutado = in_jugador1.readLine();

@@ -210,8 +210,16 @@ public class VistaJugador extends JFrame implements ActionListener
                             System.out.println(mensaje);
                             if (mensaje.startsWith("fin:")) {
                                 int resultado = Integer.parseInt(mensaje.substring(4));
-                                if (resultado == 1) board_interface.gameover("GANÓ JUGADOR 1");
-                                else if (resultado == 2) board_interface.gameover("GANÓ JUGADOR 2");
+                                if (resultado == 1)
+                                {
+                                    if (path.equals("assets/1.png")) board_interface.gameover("GANASTE");
+                                    else board_interface.gameover("PERDISTE");
+                                }
+                                else if (resultado == 2)
+                                {
+                                    if (path.equals("assets/2.png")) board_interface.gameover("GANASTE");
+                                    else board_interface.gameover("PERDISTE");
+                                }
                                 else board_interface.gameover("EMPATE");
                             }
                             if (mensaje.equals("reinicio")) {
