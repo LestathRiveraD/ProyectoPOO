@@ -124,6 +124,7 @@ public class VistaJugador extends JFrame implements ActionListener
         status = new JTextArea("INGRESA EL IP");
         status.setEditable(false);
         status.setFont(new Font("papyrus", Font.BOLD, 25));
+        status.setForeground(Color.decode("#fff3f3"));
         status.setFocusable(false);
         statuspanel.add(status);
         connectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -131,19 +132,22 @@ public class VistaJugador extends JFrame implements ActionListener
         botonMandar = new JButton("Mandar");
         botonMandar.addActionListener(this);
         botonReinicio = new JButton("Reinicio");
+        botonReinicio.setBackground(Color.decode("#a07cff"));
+        botonMandar.setBackground(Color.decode("#a07cff"));
         botonReinicio.addActionListener(this);
         connectionPanel.add(ipInput);
         connectionPanel.add(botonMandar);
         deshabilitarReinicio();
-        this.setBackground(Color.GRAY);
+        this.setBackground(Color.decode("#2c2c2a"));
         statuspanel.add(botonReinicio);
+
 
         //For loop que agrega botones a la cuadricula mientras les asigna un id y pone un action listener
         for (int i = 0; i <= 8; i++)
         {
             JButton boton = new JButton();
             boton.setFocusPainted(false);
-            boton.setBackground(Color.WHITE);
+            boton.setBackground(Color.decode("#a07cff"));
             boton.setOpaque(true);
             boton.addActionListener(this);
             boton.setForeground(new Color(0, 0, 0, 0));
@@ -151,6 +155,10 @@ public class VistaJugador extends JFrame implements ActionListener
             panel.add(boton);
             botones_lista.add(boton);
         }
+        status.setBackground(Color.decode("#2c2c2a"));
+        panel.setBackground(Color.decode("#2c2c2a"));
+        statuspanel.setBackground(Color.decode("#2c2c2a"));
+        connectionPanel.setBackground(Color.decode("#2c2c2a"));
         this.add(panel, BorderLayout.CENTER);
         this.add(statuspanel, BorderLayout.NORTH);
         this.add(connectionPanel, BorderLayout.SOUTH);
