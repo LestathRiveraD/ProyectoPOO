@@ -2,14 +2,18 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class VistaServidor extends JFrame
+public class VistaServidor extends JFrame implements ActionListener
 {
     private int victoria1 = 0;
     private int victoria2 = 0;
+    private JButton reset = new JButton("Reset");
+    Facade facade = new Facade();
     Object[][] datos = {
-            {"Jugador 1 (O)", victoria1},
-            {"Jugador 2 (X)", victoria2}
+            {"Jugador 1", victoria1},
+            {"Jugador 2", victoria2}
     };
     private JTable tabla;
     String[] columnas = {"Jugadores", "Puntos"};
@@ -33,11 +37,12 @@ public class VistaServidor extends JFrame
         tabla.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(tabla);
         add(scrollPane, BorderLayout.CENTER);
-
+        reset.addActionListener(this);
+        add(reset, BorderLayout.SOUTH);
         setVisible(true);
 
     }
-    public void updateRecord(int[] puntos)
+    public void changeValues(int[] puntos)
     {
         datos[0][1] = puntos[0];
         datos[1][1] = puntos[1];
@@ -47,5 +52,26 @@ public class VistaServidor extends JFrame
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new VistaServidor());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == reset) {
+            try {
+                facade.reset_resutados();
+                updateRecord();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public void result_update(int num) throws Exception {
+        facade.addJuego(num);
+        updateRecord();
+    }
+
+    public void updateRecord() throws Exception {
+        changeValues(facade.get_resutados());
     }
 }

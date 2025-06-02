@@ -9,12 +9,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-public class VistaJugador extends JFrame implements ActionListener
+public class OnlinePLayer extends JFrame implements ActionListener
 {
     //Declaracion de variables. Lista de todos los botones e inicializacion de las imagenes y sus iconos
-    private boolean my_turn;
+    private boolean my_turn = true;
     private int[] coords = {0,0};
-    private List<JButton> botones_lista = new ArrayList<>();
+    private List botones_lista = new ArrayList<JButton>();
     private ImageIcon icon;
     private Image image;
     private ImageIcon rivalIcon;
@@ -27,10 +27,12 @@ public class VistaJugador extends JFrame implements ActionListener
     private JTextArea ipInput;
     private JButton botonMandar;
     private boolean conectado = false;
-    private String path = null;
+    String path = null;
+
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    BufferedReader in;
+    PrintWriter out;
+
 
 
     //Creación de interfaz Boards que tiene los metodos con los que se puede interactuar
@@ -60,8 +62,6 @@ public class VistaJugador extends JFrame implements ActionListener
             {
                 status.setText("TURNO DE ENEMIGO");
             }
-            botonMandar.setVisible(false);
-            ipInput.setVisible(false);
             my_turn = turn;
         }
         public boolean getMy_turn()
@@ -102,13 +102,11 @@ public class VistaJugador extends JFrame implements ActionListener
                 boton.setText(String.valueOf(i));
                 boton.setIcon(null);
             }
-            setMy_turn(p1);
             deshabilitarReinicio();
-
         }
     };
-    
-    public VistaJugador()
+
+    public OnlinePLayer()
     {
         //Creacion de ventara y personalizacion de su vista
         icon = new ImageIcon(path);
@@ -126,7 +124,6 @@ public class VistaJugador extends JFrame implements ActionListener
         status = new JTextArea("INGRESA EL IP");
         status.setEditable(false);
         status.setFont(new Font("papyrus", Font.BOLD, 25));
-        status.setForeground(Color.decode("#fff3f3"));
         status.setFocusable(false);
         statuspanel.add(status);
         connectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -134,33 +131,26 @@ public class VistaJugador extends JFrame implements ActionListener
         botonMandar = new JButton("Mandar");
         botonMandar.addActionListener(this);
         botonReinicio = new JButton("Reinicio");
-        botonReinicio.setBackground(Color.decode("#a07cff"));
-        botonMandar.setBackground(Color.decode("#a07cff"));
         botonReinicio.addActionListener(this);
         connectionPanel.add(ipInput);
         connectionPanel.add(botonMandar);
         deshabilitarReinicio();
-        this.setBackground(Color.decode("#2c2c2a"));
+        this.setBackground(Color.GRAY);
         statuspanel.add(botonReinicio);
-
 
         //For loop que agrega botones a la cuadricula mientras les asigna un id y pone un action listener
         for (int i = 0; i <= 8; i++)
         {
             JButton boton = new JButton();
             boton.setFocusPainted(false);
-            boton.setBackground(Color.decode("#a07cff"));
+            boton.setBackground(Color.WHITE);
             boton.setOpaque(true);
             boton.addActionListener(this);
             boton.setForeground(new Color(0, 0, 0, 0));
-            boton.setText(String.valueOf(i));
+            boton.setText("x");
             panel.add(boton);
             botones_lista.add(boton);
         }
-        status.setBackground(Color.decode("#2c2c2a"));
-        panel.setBackground(Color.decode("#2c2c2a"));
-        statuspanel.setBackground(Color.decode("#2c2c2a"));
-        connectionPanel.setBackground(Color.decode("#2c2c2a"));
         this.add(panel, BorderLayout.CENTER);
         this.add(statuspanel, BorderLayout.NORTH);
         this.add(connectionPanel, BorderLayout.SOUTH);
@@ -171,147 +161,69 @@ public class VistaJugador extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton boton = (JButton) e.getSource();
-        System.out.println("??? 2");
-        if (e.getSource() == botonMandar && !conectado) 
+        if (boton.getText().equals("Mandar"))
         {
-            System.out.println("x");
-            try 
+            try
+                    (
+                            Socket socket = new Socket(ipInput.getText(), 9001);
+                            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    )
             {
-                System.out.println("mandando");
-                socket = new Socket(ipInput.getText(), 9001);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
-                
-                // Recibir imagen correspondiente
                 path = in.readLine();
+                System.out.println(path);
                 icon = new ImageIcon(path);
-                image = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-
-                if (path.equals("assets/2.png"))
-                {
-                    rivalIcon = new ImageIcon("assets/1.png");
-                    rivalImage = rivalIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-                    System.out.println("Path asignado al rival: assets/1.png" );
-                }
-                else
-                {
-                    System.out.println("Path asignado al rival: assets/2.png" );
-                    rivalIcon = new ImageIcon("assets/2.png");
-                    rivalImage = rivalIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-                }
-
-                String turn = in.readLine();
-
-                if (turn.equals("Establecido como jugador 1")) {
-                    my_turn = true;
-                } else {
-                    my_turn = false;
-                }
-                board_interface.setMy_turn(my_turn);
-                conectado = true;
-
-                System.out.println("Creando thread de escucha...");
-                new Thread(() -> {
-                    System.out.println("d");
-                    while (true) 
-                    {
-                        try {
-                            String mensaje = in.readLine();
-                            System.out.println(mensaje);
-                            if (mensaje.startsWith("fin:")) {
-                                int resultado = Integer.parseInt(mensaje.substring(4));
-                                if (resultado == 1)
-                                {
-                                    if (path.equals("assets/1.png")) board_interface.gameover("GANASTE");
-                                    else board_interface.gameover("PERDISTE");
-                                }
-                                else if (resultado == 2)
-                                {
-                                    if (path.equals("assets/2.png")) board_interface.gameover("GANASTE");
-                                    else board_interface.gameover("PERDISTE");
-                                }
-                                else board_interface.gameover("EMPATE");
-                            }
-                            if (mensaje.equals("reinicio")) {
-                                if (path.equals("assets/2.png"))
-                                {
-                                    board_interface.reinicio(false);
-                                }
-                                else
-                                {
-                                    board_interface.reinicio(true);
-                                }
-                            }
-                            int opponent_move = Integer.parseInt(mensaje);
-                            board_interface.fillSquare(return_coords(String.valueOf(opponent_move)));
-                            board_interface.setMy_turn(true);
-                            
-                        } 
-                        catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                        Thread.yield();
-                    }
-                }).start();
-            } 
-            catch (IOException ex) {
-                ex.printStackTrace();
             }
-        }
-        else
-        {
-            System.out.println("o");
+            catch (IOException ex) {ex.printStackTrace();}
         }
         if (boton.getText() == "Reinicio")
         {
             status.setText("ESPERANDO REINICIO");
-            out.println("ESPERANDO REINICIO");
             return;
         }
         if (my_turn == false){
-            System.out.println("??? 2");
             return;
         }
         if (boton.getText() == "x")
         {
-            System.out.println("???");
             return;
         }
 
-        if (socket != null && e.getSource() != botonMandar)
+        if (socket != null)
         {
             boton.setIcon(new ImageIcon(image));
-            board_interface.setMy_turn(false);
-            System.out.println("Valor del boton:" + boton.getText());
-            out.println(boton.getText());
-            
             boton.setText("x");
+            board_interface.setMy_turn(false);
+
+            out.println(boton.getText());
         }
+
     }
 
     //Metodo que en base al texto del boton los transforma en un array de int de tamaño dos para actuar como coordenadas
     private int[] return_coords(String coords){
-        int n = Integer.parseInt(coords);
-        int y = n % 3;
-        int x = n / 3;
-        return new int[]{x, y};
+        int n = coords.charAt(0) - '0';
+        int y = n%3;
+        int x = n/3;
+        int[] result = {x, y};
+        return result;
     }
     //acceso a la interface Board
     public Board getInterface(){
         return board_interface;
     }
-    
+
     public void deshabilitarReinicio()
     {
         botonReinicio.setVisible(false);
     }
-    
+
     public void habilitarReinicio()
     {
         botonReinicio.setVisible(true);
     }
 
     public static void main(String[] args) {
-        new VistaJugador();
+        new OnlinePLayer();
     }
 }
